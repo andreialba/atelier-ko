@@ -3,159 +3,152 @@ import { Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import handsImg from "@/assets/atelier-hands.jpg";
 import workshopImg from "@/assets/atelier-workshop.jpg";
+import { siteConfig, pageTitle } from "@/config/site";
+
+const principles = [
+  {
+    heading: "Solid wood, always",
+    copy: "No MDF, no veneer, no engineered cores. Every surface you see and touch is the same piece of wood, all the way through.",
+  },
+  {
+    heading: "By hand, mostly",
+    copy: "Machines mill and rough-cut. The joints, the surfaces and the finish are all worked by hand. It's slower. It shows.",
+  },
+  {
+    heading: "Made to be repaired",
+    copy: "Hard-wax oils and natural soap finishes can be re-applied at home. Joints are mechanical, not glued shut. Nothing is disposable.",
+  },
+];
+
+const facts = [
+  { value: "2018", label: "Founded" },
+  { value: "02", label: "Makers" },
+  { value: "03", label: "Timbers" },
+  { value: "4–10", label: "Weeks lead time" },
+];
 ---
 
 <BaseLayout
-  title="About — Atelier Kō"
+  title={pageTitle("The Studio")}
   description="A small workshop in Småland, Sweden, building furniture by hand from solid oak, ash and walnut. Slow, signed, and made to be repaired."
   image={workshopImg}
 >
   <main id="main-content">
-  <section class="mx-auto max-w-screen-xl px-6 pb-16 pt-20 md:pb-24 md:pt-28">
-    <p class="mb-6 flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-faded">
-      <span class="inline-block h-px w-8 bg-ink/40"></span>
-      About the atelier
-    </p>
-    <h1 class="max-w-[18ch] text-balance font-serif text-5xl leading-[0.95] md:text-7xl">
-      A small workshop, <span class="italic text-accent">made slowly.</span>
-    </h1>
-    <p class="mt-8 max-w-[58ch] text-lg leading-relaxed text-faded">
-      Atelier Kō is a two-person furniture workshop in Småland, Sweden. We design and build a small catalogue of seating, tables and storage — by hand, to order, in solid wood. No factory, no veneers, no rush.
-    </p>
-  </section>
-
-  <section class="relative w-full">
-    <Image
-      src={workshopImg}
-      alt="Sunlit Scandinavian woodworking atelier with hand tools and a half-finished chair"
-      width={1920}
-      height={1080}
-      format="webp"
-      loading="eager"
-      class="h-[50vh] w-full object-cover md:h-[70vh]"
-    />
-  </section>
-
-  <section class="mx-auto mt-24 grid max-w-screen-xl gap-10 px-6 md:mt-32 md:grid-cols-12 md:gap-16">
-    <div class="md:col-span-5">
-      <p class="mb-6 text-[11px] uppercase tracking-[0.3em] text-faded">Est. 2018</p>
-      <h2 class="text-balance font-serif text-3xl leading-[1.02] md:text-5xl">We started with one chair.</h2>
-    </div>
-    <div class="space-y-6 leading-relaxed text-faded md:col-span-6 md:col-start-7">
-      <p>
-        Atelier Kō began in a borrowed barn outside Växjö, with a single steam-bent ash chair — the piece that became the Arvid. Seven years later, we still work in solid wood only, still build to order, and still sign every piece on the underside before it leaves.
+    <section class="shell pb-12 pt-12 md:pb-16 md:pt-20">
+      <h1 class="type-h1 hero-in max-w-[11ch]">A small workshop, made slowly</h1>
+      <p class="type-lead hero-in mt-8 max-w-[58ch]" style="--reveal-delay:120ms">
+        Atelier Kō is a two-person furniture workshop in Småland, Sweden. We design and build a small catalogue of
+        seating, tables and storage — by hand, to order, in solid wood. No factory, no veneers, no rush.
       </p>
-      <p>
-        The catalogue is intentionally small. Six pieces, three timbers. We'd rather know a few things well than offer a hundred we don't.
-      </p>
-    </div>
-  </section>
+    </section>
 
-  <section class="mx-auto mt-24 max-w-screen-xl border-t border-line px-6 pt-12 md:mt-32">
-    <p class="mb-12 text-[11px] uppercase tracking-[0.3em] text-faded">How we work</p>
-    <div class="grid gap-x-8 gap-y-12 md:grid-cols-3">
-      {
-        [
-          {
-            n: "01",
-            h: "Solid wood, always",
-            p: "No MDF, no veneer, no engineered cores. Every surface you see and touch is the same piece of wood, all the way through.",
-          },
-          {
-            n: "02",
-            h: "By hand, mostly",
-            p: "Machines mill and rough-cut. The joints, the surfaces, and the finish are all worked by hand. It's slower. It shows.",
-          },
-          {
-            n: "03",
-            h: "Made to be repaired",
-            p: "Hard-wax oils and natural soap finishes can be re-applied at home. Joints are mechanical, not glued shut. Nothing is disposable.",
-          },
-        ].map((block) => (
-          <div class="space-y-3">
-            <p class="text-[10px] uppercase tracking-[0.3em] text-faded tabular-nums">{block.n}</p>
-            <h3 class="font-serif text-2xl">{block.h}</h3>
-            <p class="text-sm leading-relaxed text-faded">{block.p}</p>
-          </div>
-        ))
-      }
-    </div>
-  </section>
+    <figure class="hero-in overflow-hidden bg-surface" style="--reveal-delay:260ms">
+      <Image
+        src={workshopImg}
+        alt="Sunlit Scandinavian woodworking atelier with hand tools and a half-finished chair"
+        width={1920}
+        height={1080}
+        format="webp"
+        loading="eager"
+        decoding="sync"
+        class="parallax h-[50vh] w-full object-cover md:h-[72vh]"
+      />
+    </figure>
 
-  <section class="mt-24 md:mt-32">
-    <div class="mx-auto grid max-w-screen-2xl items-center gap-10 px-6 md:grid-cols-12 md:gap-16">
-      <div class="md:col-span-5">
-        <div class="aspect-[3/4] overflow-hidden rounded-[min(1vw,12px)] bg-paper">
-          <Image
-            src={handsImg}
-            alt="Close-up of a craftsman's hands planing a piece of pale oak"
-            width={1080}
-            height={1440}
-            format="webp"
-            loading="lazy"
-            class="h-full w-full object-cover"
-          />
-        </div>
+    {/* -------------------------------------------------------------- Origin */}
+    <section class="shell mt-24 grid gap-8 md:mt-36 md:grid-cols-12">
+      <div class="md:col-span-5" data-reveal>
+        <h2 class="type-h2 max-w-[12ch]">We started with one chair</h2>
       </div>
-      <div class="space-y-8 md:col-span-6 md:col-start-7">
-        <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-faded">
-          <span class="inline-block h-px w-8 bg-ink/40"></span>
-          On materials
+      <div class="md:col-span-6 md:col-start-7" data-reveal style="--reveal-delay:120ms">
+        <p class="type-body">
+          Atelier Kō began in a borrowed barn outside Växjö, with a single steam-bent ash chair — the piece that
+          became the Arvid. Seven years later, we still work in solid wood only, still build to order, and still
+          sign every piece on the underside before it leaves.
         </p>
-        <blockquote class="text-balance font-serif text-3xl leading-[1.15] md:text-4xl">
-          "We don't buy lumber by the pallet. Every board is chosen
-          <span class="italic text-accent">for the piece it will become</span> — sometimes months before it is cut."
-        </blockquote>
-        <p class="text-xs uppercase tracking-[0.25em] text-faded">— Erik Lindgren, founder</p>
-        <div class="space-y-3 border-t border-line pt-6 text-sm leading-relaxed text-faded">
-          <p>
-            European oak from managed Swedish forests. Curved ash from a small reserve on the south coast. American walnut from a family mill in Pennsylvania. Three woods. No more.
-          </p>
+        <p class="type-body mt-5">
+          The catalogue is intentionally small. Six pieces, three timbers. We'd rather know a few things well than
+          offer a hundred we don't.
+        </p>
+      </div>
+    </section>
+
+    {/* ---------------------------------------------------------- Principles */}
+    <section class="shell mt-24 md:mt-36">
+      <div class="rule" data-reveal="line"></div>
+      <h2 class="type-h2 mt-8 max-w-[16ch]" data-reveal>How we work</h2>
+
+      <div class="mt-12 grid gap-x-8 gap-y-12 md:grid-cols-3">
+        {
+          principles.map((principle, index) => (
+            <div class="border-t border-line pt-6" data-reveal style={`--reveal-delay:${index * 110}ms`}>
+              <h3 class="type-h3">{principle.heading}</h3>
+              <p class="type-body mt-4 text-[0.9375rem]">{principle.copy}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    {/* ----------------------------------------------------------- Materials */}
+    <section class="shell mt-24 grid items-center gap-10 md:mt-36 md:grid-cols-12 md:gap-12">
+      <div class="md:col-span-5">
+        <div class="overflow-hidden bg-surface" data-reveal="mask">
+          <div>
+            <Image
+              src={handsImg}
+              alt="Close-up of a craftsman's hands planing a piece of pale oak"
+              width={1080}
+              height={1440}
+              format="webp"
+              loading="lazy"
+              class="aspect-[3/4] w-full object-cover"
+            />
+          </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <section class="mx-auto mt-24 max-w-screen-xl border-y border-line px-6 py-12 md:mt-32">
-    <div class="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
-      {
-        [
-          { n: "2018", l: "Founded" },
-          { n: "2", l: "Makers" },
-          { n: "3", l: "Timbers" },
-          { n: "4–10", l: "Weeks lead time" },
-        ].map((stat) => (
-          <div class="space-y-2">
-            <p class="font-serif text-4xl tabular-nums md:text-5xl">{stat.n}</p>
-            <p class="text-[10px] uppercase tracking-[0.3em] text-faded">{stat.l}</p>
-          </div>
-        ))
-      }
-    </div>
-  </section>
+      <div class="md:col-span-6 md:col-start-7" data-reveal style="--reveal-delay:140ms">
+        <blockquote>
+          <p class="type-h3 max-w-[26ch] text-[clamp(1.5rem,2.8vw,2.25rem)] leading-[1.15]">
+            "We don't buy lumber by the pallet. Every board is chosen for the piece it will become — sometimes
+            months before it is cut."
+          </p>
+          <footer class="label mt-6">Erik Lindgren — founder</footer>
+        </blockquote>
+        <p class="type-body mt-8 max-w-[48ch] border-t border-line pt-6 text-[0.9375rem]">
+          European oak from managed Swedish forests. Curved ash from a small reserve on the south coast. American
+          walnut from a family mill in Pennsylvania. Three woods. No more.
+        </p>
+      </div>
+    </section>
 
-  <section id="studio" class="mx-auto mb-32 mt-12 max-w-screen-xl px-6 md:mt-16">
-    <div class="grid items-end gap-10 md:grid-cols-12">
-      <div class="md:col-span-7">
-        <h2 class="max-w-[20ch] text-balance font-serif text-3xl leading-[1.02] md:text-5xl">
-          Visit the workshop, or begin with a piece.
-        </h2>
+    {/* --------------------------------------------------------------- Facts */}
+    <section class="mt-24 border-y border-line md:mt-36" aria-label="Studio at a glance">
+      <dl class="shell grid grid-cols-2 md:grid-cols-4">
+        {
+          facts.map((fact, index) => (
+            <div class="fact" data-reveal style={`--reveal-delay:${index * 70}ms`}>
+              <dt class="label">{fact.label}</dt>
+              <dd class="mt-2.5 text-2xl font-medium tracking-[-0.03em] md:text-3xl">{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    {/* ----------------------------------------------------------------- CTA */}
+    <section id="studio" class="shell mt-24 md:mt-36">
+      <div class="grid items-end gap-8 md:grid-cols-12" data-reveal>
+        <div class="md:col-span-7">
+          <h2 class="type-h2 max-w-[16ch]">Visit the workshop, or begin with a piece</h2>
+        </div>
+        <div class="flex flex-wrap gap-3 md:col-span-5 md:justify-end">
+          <a href="/catalog" class="btn btn-primary">See the catalogue</a>
+          <a href={`mailto:${siteConfig.email}`} class="btn btn-outline">Write to us</a>
+        </div>
       </div>
-      <div class="flex flex-col gap-4 sm:flex-row md:col-span-5 md:justify-end">
-        <a
-          href="/catalog"
-          class="inline-flex items-center justify-center gap-3 rounded-full bg-ink px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-base)] transition-colors hover:bg-accent"
-        >
-          See the catalogue →
-        </a>
-        <a
-          href="mailto:workshop@atelier-ko.example"
-          class="inline-flex items-center justify-center gap-3 rounded-full px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] text-ink ring-1 ring-line transition-colors hover:bg-paper"
-        >
-          Write to us
-        </a>
-      </div>
-    </div>
-  </section>
+    </section>
   </main>
+
 </BaseLayout>

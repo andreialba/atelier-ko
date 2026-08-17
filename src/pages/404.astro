@@ -1,21 +1,22 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { pageTitle } from "@/config/site";
 ---
 
-<BaseLayout title="Page not found — Atelier Kō" description="The page you're looking for doesn't exist or has been moved." noindex={true} includeHeader={false} includeFooter={false}>
-  <main id="main-content" class="flex min-h-screen items-center justify-center bg-base px-4">
-    <div class="max-w-md text-center">
-      <h1 class="font-serif text-7xl">404</h1>
-      <h2 class="mt-4 font-serif text-2xl">Page not found</h2>
-      <p class="mt-2 text-sm text-faded">The page you're looking for doesn't exist or has been moved.</p>
-      <div class="mt-6">
-        <a
-          href="/catalog"
-          class="inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-xs uppercase tracking-widest text-[var(--color-base)] transition-colors hover:bg-accent"
-        >
-          Back to the catalogue
-        </a>
-      </div>
+<BaseLayout
+  title={pageTitle("Page not found")}
+  description="The page you're looking for doesn't exist or has been moved."
+  noindex={true}
+>
+  <main id="main-content" class="shell flex min-h-[70vh] flex-col justify-center py-24">
+    <p class="mono hero-in text-[0.6875rem] uppercase tracking-[0.05em] text-accent">Error 404</p>
+    <h1 class="type-hero hero-in mt-6 max-w-[14ch]" style="--reveal-delay:90ms">This page isn't in the catalogue</h1>
+    <p class="type-lead hero-in mt-8 max-w-[46ch]" style="--reveal-delay:180ms">
+      The page you're looking for doesn't exist, or it has been moved. The six pieces we do make are all here.
+    </p>
+    <div class="hero-in mt-10 flex flex-wrap gap-3" style="--reveal-delay:260ms">
+      <a href="/catalog" class="btn btn-primary">Back to the catalogue</a>
+      <a href="/" class="btn btn-outline">Home</a>
     </div>
   </main>
 </BaseLayout>

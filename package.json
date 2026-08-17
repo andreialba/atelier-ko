@@ -1,6 +1,6 @@
 {
   "name": "atelier-ko-astro-theme",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "homepage": "https://atelier-ko-topaz.vercel.app/",
   "type": "module",
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
-    "@tailwindcss/postcss": "^4.3.1",
-    "astro": "^6.4.8",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.2",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {

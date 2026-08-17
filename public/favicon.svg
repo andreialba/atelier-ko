@@ -1,6 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Atelier Kō">
-  <rect width="64" height="64" rx="16" fill="#f8f7f4"/>
-  <rect x="5.5" y="5.5" width="53" height="53" rx="12.5" fill="none" stroke="#27272a" stroke-opacity=".14"/>
-  <path d="M17.5 47 30.3 16.5h3.5L46.5 47h-5.1l-3.1-7.7H25.5L22.5 47h-5Zm9.6-11.7h9.6L32 23.2l-4.9 12.1Z" fill="#27272a"/>
-  <path d="M28.4 43.6h7.2" stroke="#5a2d10" stroke-width="2.4" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="A">
+  <style>
+    path {
+      fill: #101010;
+    }
+    @media (prefers-color-scheme: dark) {
+      path {
+        fill: #f4f4f2;
+      }
+    }
+  </style>
+  <path
+    fill-rule="evenodd"
+    d="M26.2 7H37.8L60 57H50.2L45.32 46H18.68L13.8 57H4L26.2 7ZM32 16L41.76 38H22.24L32 16Z"
+  />
 </svg>

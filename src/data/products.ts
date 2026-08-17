@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from "astro:content";
+import { siteConfig } from "@/config/site";
 
 type ProductEntry = CollectionEntry<"products">;
 export type Product = ProductEntry["data"] & { slug: string; description: string };
@@ -56,11 +57,22 @@ export function getProductFilters(products: Product[]): {
 }
 
 export function formatPrice(value: number): string {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat(siteConfig.commerce.locale, {
     style: "currency",
-    currency: "USD",
+    currency: siteConfig.commerce.currency,
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+/** Resolves a configured slug, failing the build when it does not exist. */
+export function requireProduct(products: Product[], slug: string): Product {
+  const product = products.find((entry) => entry.slug === slug);
+  if (!product) {
+    throw new Error(
+      `siteConfig.featured references "${slug}", but no such product exists in src/content/products.`,
+    );
+  }
+  return product;
 }
 
 export function productForJson(product: Product) {

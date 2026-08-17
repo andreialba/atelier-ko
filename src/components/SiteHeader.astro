@@ -1,192 +1,218 @@
 ---
 import { Image } from "astro:assets";
-import { formatPrice, getProduct } from "@/data/products.js";
+import CartDrawer from "@/components/CartDrawer.astro";
+import { siteConfig } from "@/config/site";
+import { formatPrice, getProducts, requireProduct } from "@/data/products";
+
+interface Props {
+  /** Current pathname, used to mark the active nav item. */
+  currentPath?: string;
+}
 
 const { currentPath = "/" } = Astro.props;
 
-const isActive = (href = "") => {
-  if (href === "/") return currentPath === "/";
-  return currentPath.startsWith(href);
-};
+const isActive = (href: string) => (href === "/" ? currentPath === "/" : currentPath.startsWith(href));
 
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/catalog", label: "Catalogue" },
-  { href: "/about", label: "About" },
-];
-
-const featuredProduct = await getProduct("oken-stool");
-
-if (!featuredProduct) {
-  throw new Error("Missing required mobile menu product: oken-stool");
-}
+const navItems = siteConfig.navigation;
+const featuredProduct = requireProduct(await getProducts(), siteConfig.featured.mobileMenu);
+const cartIndex = String(navItems.length + 1).padStart(2, "0");
 ---
 
-<nav class="sticky top-0 z-50 border-b border-line bg-base/80 backdrop-blur-md" aria-label="Main navigation">
-  <div class="mx-auto flex h-16 max-w-screen-xl items-center justify-between px-6">
-    <a href="/" class="font-serif text-xl italic tracking-tight" aria-label="Atelier Kō home">
-      Atelier Kō
+<header class="site-header sticky top-0 z-50">
+  <nav class="shell flex h-[4.5rem] items-center justify-between gap-6" aria-label="Main">
+    <a
+      href="/"
+      class="-m-2 p-2 text-[0.9375rem] font-semibold uppercase tracking-[-0.01em] transition-colors hover:text-accent"
+      aria-label={`${siteConfig.name}, home`}
+    >
+      {siteConfig.name}
     </a>
-    <div class="hidden items-center gap-8 text-sm md:flex">
+
+    <ul class="hidden items-center gap-9 md:flex">
       {
         navItems.map((item) => (
-          <a
-            href={item.href}
-            class:list={[
-              "transition-colors hover:text-accent",
-              isActive(item.href) ? "text-ink" : "text-faded",
-            ]}
-            aria-current={isActive(item.href) ? "page" : undefined}
-          >
-            {item.label}
-          </a>
+          <li>
+            <a
+              href={item.href}
+              class:list={["nav-link link-mono", isActive(item.href) && "is-current"]}
+              aria-current={isActive(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
         ))
       }
-    </div>
-    <div class="flex items-center gap-3">
+    </ul>
+
+    <div class="flex items-center gap-1">
       <a
         href="/cart"
+        data-cart-toggle
         data-cart-label
         aria-label="Cart, 0 items"
-        class="relative inline-flex items-center gap-1.5 p-1 text-sm font-medium transition-colors hover:text-accent"
+        aria-expanded="false"
+        aria-controls="cart-drawer-panel"
+        class="link-mono -m-2 inline-flex items-center gap-2 p-2 transition-colors hover:text-accent"
       >
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M6 8h12l-1 12H7L6 8Z"></path>
-          <path d="M9 8a3 3 0 0 1 6 0"></path>
-        </svg>
-        <span class="tabular-nums text-faded" data-cart-count>(0)</span>
+        <span class="hidden sm:inline">Cart</span>
+        <span class="mono text-[0.6875rem]" data-cart-count>00</span>
       </a>
       <button
         type="button"
-        class="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors hover:text-accent md:hidden"
-        aria-label="Open menu"
+        class="-mr-2 inline-flex size-10 items-center justify-center transition-colors hover:text-accent md:hidden"
         aria-controls="mobile-menu"
         aria-expanded="false"
         data-mobile-menu-open
       >
         <span class="sr-only">Open menu</span>
-        <span class="flex w-4 flex-col gap-1.5" aria-hidden="true">
-          <span class="h-px w-full bg-current"></span>
+        <span class="flex w-[1.125rem] flex-col gap-[5px]" aria-hidden="true">
           <span class="h-px w-full bg-current"></span>
           <span class="h-px w-full bg-current"></span>
         </span>
       </button>
     </div>
-  </div>
-</nav>
+  </nav>
+</header>
 
 <div
   id="mobile-menu"
-  class="fixed inset-0 z-[60] hidden h-dvh overflow-hidden bg-base text-ink md:hidden"
+  class="fixed inset-0 z-[60] h-dvh bg-canvas md:hidden"
   role="dialog"
   aria-modal="true"
-  aria-label="Mobile menu"
+  aria-label="Site menu"
   data-mobile-menu
+  hidden
 >
-    <div class="flex h-full flex-col px-6 pb-6 pt-5">
-      <div class="flex h-11 items-center justify-between">
-        <a href="/" class="font-serif text-xl italic tracking-tight" aria-label="Atelier Kō home" data-mobile-menu-link>
-          Atelier Kō
-        </a>
-        <button
-          type="button"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors hover:text-accent"
-          aria-label="Close menu"
-          data-mobile-menu-close
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <path d="M6 6l12 12"></path>
-            <path d="M18 6L6 18"></path>
-          </svg>
-        </button>
-      </div>
+  <div class="flex h-full flex-col px-[var(--gutter)] pb-8 pt-0">
+    <div class="flex h-[4.5rem] shrink-0 items-center justify-between">
+      <span class="text-[0.9375rem] font-semibold uppercase tracking-[-0.01em]">Menu</span>
+      <button
+        type="button"
+        class="-mr-2 inline-flex size-10 items-center justify-center transition-colors hover:text-accent"
+        data-mobile-menu-close
+      >
+        <span class="sr-only">Close menu</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true">
+          <path d="M5 5l14 14"></path>
+          <path d="M19 5L5 19"></path>
+        </svg>
+      </button>
+    </div>
 
-      <div class="flex min-h-0 flex-1 flex-col gap-5 pt-7">
-        <div class="space-y-2.5">
-          {
-            navItems.map((item) => (
-              <a
-                href={item.href}
-                class:list={[
-                  "block font-serif text-4xl leading-none transition-colors hover:text-accent",
-                  isActive(item.href) ? "text-ink" : "text-faded",
-                ]}
-                aria-current={isActive(item.href) ? "page" : undefined}
-                data-mobile-menu-link
-              >
-                {item.label}
-              </a>
-            ))
-          }
-          <a
-            href="/cart"
-            data-cart-label
-            aria-label="Cart, 0 items"
-            class="inline-flex items-center gap-2 pt-1 text-sm uppercase tracking-[0.2em] text-faded transition-colors hover:text-ink"
-            data-mobile-menu-link
-          >
-            Cart
-            <span class="tabular-nums" data-cart-count>(0)</span>
-          </a>
-        </div>
-
+    <ul class="mt-6 border-t border-line">
+      {
+        navItems.map((item, index) => (
+          <li class="menu-item border-b border-line" style={`--i:${index}`}>
+            <a
+              href={item.href}
+              class:list={[
+                "flex items-baseline gap-4 py-5 transition-colors hover:text-accent",
+                !isActive(item.href) && "text-muted",
+              ]}
+              aria-current={isActive(item.href) ? "page" : undefined}
+              data-mobile-menu-link
+            >
+              <span class="mono text-[0.6875rem] text-accent">{String(index + 1).padStart(2, "0")}</span>
+              <span class="type-h3">{item.label}</span>
+            </a>
+          </li>
+        ))
+      }
+      <li class="menu-item border-b border-line" style={`--i:${navItems.length}`}>
         <a
-          href={`/products/${featuredProduct.slug}`}
-          class="group block border-y border-line py-4"
+          href="/cart"
+          data-cart-label
+          aria-label="Cart, 0 items"
+          class="flex items-baseline gap-4 py-5 text-muted transition-colors hover:text-accent"
           data-mobile-menu-link
         >
-          <div class="aspect-[16/10] max-h-[32dvh] overflow-hidden rounded-md bg-paper">
-            <Image
-              src={featuredProduct.images[0]}
-              alt={`${featuredProduct.name} - ${featuredProduct.shortDescription}`}
-              width={900}
-              height={560}
-              format="webp"
-              loading="lazy"
-              class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-            />
-          </div>
-          <div class="mt-3 flex items-end justify-between gap-4">
-            <div class="min-w-0 space-y-1.5">
-              <p class="text-[10px] uppercase tracking-[0.3em] text-faded">Featured piece</p>
-              <p class="font-serif text-3xl leading-none">{featuredProduct.name}</p>
-              <p class="text-sm leading-relaxed text-faded">{featuredProduct.shortDescription}</p>
-            </div>
-            <p class="shrink-0 pb-0.5 text-xs uppercase tracking-[0.2em] text-accent">
-              {formatPrice(featuredProduct.price)}
-            </p>
-          </div>
+          <span class="mono text-[0.6875rem] text-accent">{cartIndex}</span>
+          <span class="type-h3">Cart</span>
+          <span class="mono ml-auto self-center text-[0.6875rem]" data-cart-count>00</span>
         </a>
+      </li>
+    </ul>
 
-        <div class="mt-auto space-y-2 text-sm">
-          <p class="text-[10px] uppercase tracking-[0.3em] text-faded">Contact</p>
-          <a href="mailto:studio@atelier-ko.com" class="block transition-colors hover:text-accent" data-mobile-menu-link>
-            studio@atelier-ko.com
-          </a>
-        </div>
+    <a
+      href={`/products/${featuredProduct.slug}`}
+      class="menu-item group mt-auto block pt-8"
+      style={`--i:${navItems.length + 1}`}
+      data-mobile-menu-link
+    >
+      <div class="overflow-hidden bg-surface">
+        <Image
+          src={featuredProduct.images[0]}
+          alt={`${featuredProduct.name} — ${featuredProduct.shortDescription}`}
+          width={900}
+          height={560}
+          format="webp"
+          loading="lazy"
+          class="aspect-[16/10] max-h-[28dvh] w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+        />
       </div>
-    </div>
+      <div class="mt-3 flex items-baseline justify-between gap-4">
+        <p class="label">In the workshop — {featuredProduct.name}</p>
+        <p class="mono text-[0.6875rem]">{formatPrice(featuredProduct.price)}</p>
+      </div>
+    </a>
   </div>
 </div>
+
+<CartDrawer />
+
+<style>
+  .nav-link {
+    display: inline-block;
+    color: var(--muted);
+    transition: color 240ms ease;
+  }
+
+  .nav-link:hover {
+    color: var(--ink);
+  }
+
+  .nav-link.is-current {
+    color: var(--ink);
+  }
+
+  /* Active route is marked with an accent rule, not colour alone. */
+  .nav-link.is-current::after {
+    content: "";
+    display: block;
+    height: 1px;
+    margin-top: 5px;
+    background: var(--accent);
+  }
+
+  [data-mobile-menu][hidden] {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-mobile-menu]:not([hidden]) {
+      animation: menu-in 320ms var(--ease-out-expo) both;
+    }
+
+    [data-mobile-menu]:not([hidden]) .menu-item {
+      animation: menu-item-in 620ms var(--ease-out-expo) both;
+      animation-delay: calc(120ms + var(--i, 0) * 55ms);
+    }
+
+    @keyframes menu-in {
+      from {
+        opacity: 0;
+        clip-path: inset(0 0 100% 0);
+      }
+    }
+
+    @keyframes menu-item-in {
+      from {
+        opacity: 0;
+        transform: translate3d(0, 1.25rem, 0);
+      }
+    }
+  }
+</style>
 
 <script is:inline>
   (() => {
@@ -196,48 +222,26 @@ if (!featuredProduct) {
 
     if (!menu || !openButton || !closeButton) return;
 
-    const focusableSelector = [
-      "a[href]",
-      "button:not([disabled])",
-      "input:not([disabled])",
-      "select:not([disabled])",
-      "textarea:not([disabled])",
-      '[tabindex]:not([tabindex="-1"])',
-    ].join(",");
-    let lastFocusedElement;
+    const focusableSelector = "a[href],button:not([disabled]),input:not([disabled]),[tabindex]:not([tabindex='-1'])";
+    let lastFocused = null;
 
     function getFocusable() {
-      return Array.from(menu.querySelectorAll(focusableSelector)).filter((element) => {
-        return element instanceof HTMLElement && element.offsetParent !== null;
-      });
-    }
-
-    function lockScroll() {
-      document.documentElement.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
-    }
-
-    function unlockScroll() {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
+      return Array.from(menu.querySelectorAll(focusableSelector)).filter((node) => node.offsetParent !== null);
     }
 
     function openMenu() {
-      lastFocusedElement = document.activeElement;
-      menu.classList.remove("hidden");
+      lastFocused = document.activeElement;
+      menu.hidden = false;
       openButton.setAttribute("aria-expanded", "true");
-      lockScroll();
+      document.documentElement.style.overflow = "hidden";
       closeButton.focus({ preventScroll: true });
     }
 
     function closeMenu({ restoreFocus = true } = {}) {
-      menu.classList.add("hidden");
+      menu.hidden = true;
       openButton.setAttribute("aria-expanded", "false");
-      unlockScroll();
-
-      if (restoreFocus && lastFocusedElement instanceof HTMLElement) {
-        lastFocusedElement.focus({ preventScroll: true });
-      }
+      document.documentElement.style.overflow = "";
+      if (restoreFocus && lastFocused) lastFocused.focus({ preventScroll: true });
     }
 
     openButton.addEventListener("click", openMenu);
@@ -248,7 +252,7 @@ if (!featuredProduct) {
     });
 
     document.addEventListener("keydown", (event) => {
-      if (menu.classList.contains("hidden")) return;
+      if (menu.hidden) return;
 
       if (event.key === "Escape") {
         event.preventDefault();
@@ -261,7 +265,6 @@ if (!featuredProduct) {
       const focusable = getFocusable();
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
-
       if (!first || !last) return;
 
       if (event.shiftKey && document.activeElement === first) {
@@ -274,7 +277,7 @@ if (!featuredProduct) {
     });
 
     window.addEventListener("resize", () => {
-      if (window.matchMedia("(min-width: 768px)").matches && !menu.classList.contains("hidden")) {
+      if (!menu.hidden && window.matchMedia("(min-width: 768px)").matches) {
         closeMenu({ restoreFocus: false });
       }
     });
